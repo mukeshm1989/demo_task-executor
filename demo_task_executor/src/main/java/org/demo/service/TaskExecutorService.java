@@ -2,17 +2,14 @@ package org.demo.service;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class TaskExecutorService implements TaskExecutor {
-    private final int maxConcurrency;
     private final ExecutorService executor;
     private final Map<TaskGroup, Semaphore> groupSemaphores;
     private final Queue<Task<?>> taskQueue;
     private final Map<UUID, Future<?>> futures;
 
     public TaskExecutorService(int maxConcurrency) {
-        this.maxConcurrency = maxConcurrency;
         this.executor = Executors.newFixedThreadPool(maxConcurrency);
         this.groupSemaphores = new ConcurrentHashMap<>();
         this.taskQueue = new LinkedList<>();
