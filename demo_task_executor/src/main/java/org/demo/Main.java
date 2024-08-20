@@ -8,15 +8,15 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         // Initialize the TaskExecutorService with a maximum of 2 concurrent tasks
         TaskExecutorService executorService = new TaskExecutorService(2);
-        
+
         try {
             // Define TaskGroups
             TaskGroup group1 = new TaskGroup(UUID.randomUUID());
             TaskGroup group2 = new TaskGroup(UUID.randomUUID());
-            
+
             // Create tasks
             Task<Integer> task1 = new Task<>(UUID.randomUUID(), group1, TaskType.READ, () -> {
                 Thread.sleep(500); // Simulate some work
@@ -36,12 +36,13 @@ public class Main {
             Future<Integer> future4 = executorService.submitTask(task4);
 
             // Retrieve and print results
+
             System.out.println("Task 1 result: " + future1.get());
             System.out.println("Task 2 result: " + future2.get());
             System.out.println("Task 3 result: " + future3.get());
             System.out.println("Task 4 result: " + future4.get());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new InterruptedException(e.getMessage());
         } finally {
             // Shutdown the executor service
             executorService.shutdown();
